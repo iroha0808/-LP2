@@ -1,33 +1,36 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- ▼Google広告 計測タグ（要編集）
-  AW-XXXXXXXXX を実際のGoogle広告のコンバージョンID（Google広告管理画面「ツールと設定」→「コンバージョン」→対象アクションの「タグの設定手順」で確認）に、
-  AbCdEfGhIjKlMnOp を各コンバージョンアクションのラベルに差し替えてください。
-  フォーム送信用・電話クリック用で、ラベルは別々に発行するのが一般的です。
+<!-- ▼Google タグ（GA4：ここのはLP２）
+  コンバージョンはGA4のキーイベント経由でGoogle広告に取り込む。
+  generate_lead＝フォーム送信 / tel_tap＝電話タップ / line_click＝LINEクリック
 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-XXXXXXXXX"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-050Z1JB1DQ"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'AW-XXXXXXXXX');
+  gtag('config', 'G-050Z1JB1DQ');
 
-  // フォーム送信（無料見積り依頼）のコンバージョン計測
+  // フォーム送信（無料見積り依頼）
   function gtagReportFormConversion(){
-    gtag('event', 'conversion', {
-      'send_to': 'AW-XXXXXXXXX/AbCdEfGhIjKlMnOp'
-    });
+    gtag('event', 'generate_lead');
   }
-  // 電話タップのコンバージョン計測
+  // 電話タップ（タグが応答しなくても1秒後に発信）
   function gtagReportCallConversion(url){
-    gtag('event', 'conversion', {
-      'send_to': 'AW-XXXXXXXXX/QrStUvWxYzAbCdEf',
-      'event_callback': function(){
-        if (typeof url === 'string') { window.location = url; }
-      }
-    });
+    var done = false;
+    function go(){
+      if (done) return;
+      done = true;
+      window.location = url;
+    }
+    gtag('event', 'tel_tap', {'event_callback': go});
+    setTimeout(go, 1000);
     return false;
+  }
+  // LINEボタンクリック
+  function gtagReportLineConversion(){
+    gtag('event', 'line_click');
   }
 </script>
 
@@ -420,7 +423,7 @@
         <a href="tel:07085816921" onclick="return gtagReportCallConversion(this.href);" class="btn btn-primary">📞 今すぐ電話で相談</a>
       </div>
       <div class="hero-ctas-sub">
-        <a href="https://lin.ee/auAzwZU" target="_blank" rel="noopener">💬 LINEで連絡</a>
+        <a href="https://lin.ee/auAzwZU" target="_blank" rel="noopener" onclick="gtagReportLineConversion();">💬 LINEで連絡</a>
         <a href="#form">✎ フォームで相談</a>
       </div>
       <div class="hero-note">
@@ -664,7 +667,7 @@
       <div class="contact-card">
         <div class="cm-label">公式LINEでのご相談</div>
         <p>チャット感覚で気軽にご相談いただけます。お写真を送っていただくことも可能です。</p>
-        <a href="https://lin.ee/auAzwZU" target="_blank" rel="noopener" class="btn btn-line" style="width:100%;">💬 LINEで連絡</a>
+        <a href="https://lin.ee/auAzwZU" target="_blank" rel="noopener" onclick="gtagReportLineConversion();" class="btn btn-line" style="width:100%;">💬 LINEで連絡</a>
       </div>
       <div class="contact-card">
         <div class="cm-label">フォームでのご相談</div>
@@ -774,7 +777,7 @@
 
 <div class="float-bar">
   <a href="tel:07085816921" onclick="return gtagReportCallConversion(this.href);" class="fb-call">📞 今すぐ電話</a>
-  <a href="https://lin.ee/auAzwZU" target="_blank" rel="noopener" class="fb-line">💬 LINEで連絡</a>
+  <a href="https://lin.ee/auAzwZU" target="_blank" rel="noopener" onclick="gtagReportLineConversion();" class="fb-line">💬 LINEで連絡</a>
   <a href="#form" class="fb-form">✎ 無料見積り</a>
 </div>
 
