@@ -788,8 +788,7 @@
         <div class="form-row">
           <label>ご相談内容</label>
           <textarea name="entry.991197637" placeholder="例：1Kのお部屋で、床が見えないほど物が積み重なっています。"></textarea>
-        </div>
-        <p class="privacy-note" style="font-size:12px; color:var(--ink-soft); margin-bottom:10px;">送信により<a href="privacy.html" target="_blank" style="color:var(--accent-dark); text-decoration:underline;">プライバシーポリシー</a>に同意したものとみなします。</p>
+        </div>        <p class="privacy-note" style="font-size:12px; color:var(--ink-soft); margin-bottom:10px;">送信により<a href="privacy.html" target="_blank" style="color:var(--accent-dark); text-decoration:underline;">プライバシーポリシー</a>に同意したものとみなします。</p>
         <p id="form-error" class="form-error" role="alert" style="display:none;"></p>
       <button class="btn btn-primary form-submit" type="submit">この内容で無料見積りを依頼する</button>
       </form>
@@ -847,6 +846,10 @@
             }
             errorBox.style.display = 'none';
 
+            // Googleフォーム側で「状況」が必須のため、空欄なら定型文を入れて受付拒否を防ぐ
+            var note = form.querySelector('[name="entry.991197637"]');
+            if (!note.value.trim()) note.value = '（記入なし）';
+
             sending = true;
             button.disabled = true;
             button.textContent = '送信中…';
@@ -876,9 +879,4 @@
 
 <div class="float-bar">
   <a href="tel:07085816921" onclick="return gtagReportCallConversion(this.href);" class="fb-call">📞 今すぐ電話</a>
-  <a href="https://lin.ee/auAzwZU" target="_blank" rel="noopener" onclick="gtagReportLineConversion();" class="fb-line">💬 LINEで連絡</a>
-  <a href="#form" class="fb-form">✎ 無料見積り</a>
-</div>
-
-</body>
-</html>
+  <a href="https:/
