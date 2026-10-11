@@ -379,6 +379,9 @@
   .radio-group{display:flex; gap:16px; flex-wrap:wrap;}
   .radio-group label{display:flex; align-items:center; gap:6px; font-size:13.5px; font-weight:400;}
   .form-submit{width:100%; padding:16px; font-size:15px; margin-top:6px;}
+  .form-submit:disabled{opacity:.6; cursor:default;}
+  .form-error{background:#FBEAE7; border:1px solid var(--danger); color:var(--danger); font-size:13.5px; font-weight:700; padding:10px 14px; border-radius:8px; margin-bottom:12px;}
+  .form-row .is-invalid{border-color:var(--danger); background:#FFF6F4;}
   .form-thanks{
     text-align:center; padding:40px 20px; font-size:16px; color:var(--ink);
   }
@@ -745,7 +748,8 @@
       <form id="kokonoha-form"
             action="https://docs.google.com/forms/d/e/1FAIpQLSfWJeS1HfQekXmM13RtdrMpaA7z_6ijNfuBogtxjdYuH1aZsw/formResponse"
             method="POST"
-            target="hidden_iframe">
+            target="hidden_iframe"
+            novalidate>
         <div class="form-row">
           <label>お名前<span class="req">必須</span></label>
           <input type="text" name="entry.1633989786" placeholder="山田 太郎" required>
@@ -786,6 +790,7 @@
           <textarea name="entry.991197637" placeholder="例：1Kのお部屋で、床が見えないほど物が積み重なっています。"></textarea>
         </div>
         <p class="privacy-note" style="font-size:12px; color:var(--ink-soft); margin-bottom:10px;">送信により<a href="privacy.html" target="_blank" style="color:var(--accent-dark); text-decoration:underline;">プライバシーポリシー</a>に同意したものとみなします。</p>
+        <p id="form-error" class="form-error" role="alert" style="display:none;"></p>
       <button class="btn btn-primary form-submit" type="submit">この内容で無料見積りを依頼する</button>
       </form>
       <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
@@ -794,15 +799,86 @@
       </div>
       <p class="form-alt">お急ぎの方は、フォーム送信より<strong>お電話</strong>が確実です。</p>
       <script>
+        // LINEなどのアプリ内ブラウザでは、必須項目の吹き出しやiframeのload検知が働かないことがあるため、
+        // 入力チェックは自前で表示し、送信はfetchで行う（失敗時のみ従来のiframe送信に切り替える）
         (function(){
           var form = document.getElementById('kokonoha-form');
-          var iframe = document.getElementById('hidden_iframe');
           var thanks = document.getElementById('form-thanks');
-          var submitted = false;
-          iframe.addEventListener('load', function(){
-            if(!submitted) return; // 初期読み込み時は無視
+          var errorBox = document.getElementById('form-error');
+          var button = form.querySelector('.form-submit');
+          var sending = false;
+          var done = false;
+
+          function showThanks(){
+            if (done) return;
+            done = true;
             form.style.display = 'none';
             thanks.style.display = 'block';
+            thanks.scrollIntoView({block:'center'});
             if (typeof gtagReportFormConversion === 'function') { gtagReportFormConversion(); }
+          }
+
+          function encodeForm(){
+            var params = [];
+            Array.prototype.forEach.call(form.elements, function(el){
+              if (!el.name || el.disabled) return;
+              if ((el.type === 'radio' || el.type === 'checkbox') && !el.checked) return;
+              params.push(encodeURIComponent(el.name) + '=' + encodeURIComponent(el.value));
+            });
+            return params.join('&');
+          }
+
+          form.addEventListener('input', function(ev){ ev.target.classList.remove('is-invalid'); });
+          form.addEventListener('change', function(ev){ ev.target.classList.remove('is-invalid'); });
+
+          form.addEventListener('submit', function(ev){
+            ev.preventDefault();
+            if (sending) return;
+
+            var invalid = form.querySelector(':invalid');
+            if (invalid) {
+              var label = invalid.closest('.form-row').querySelector('label').firstChild.textContent.trim();
+              errorBox.textContent = label + (invalid.tagName === 'SELECT' ? 'を選択してください。' : 'を入力してください。');
+              errorBox.style.display = 'block';
+              invalid.classList.add('is-invalid');
+              invalid.scrollIntoView({block:'center'});
+              invalid.focus();
+              return;
+            }
+            errorBox.style.display = 'none';
+
+            sending = true;
+            button.disabled = true;
+            button.textContent = '送信中…';
+
+            fetch(form.action, {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+              body: encodeForm()
+            }).then(showThanks).catch(function(){
+              form.submit();
+              setTimeout(showThanks, 1500);
+            });
           });
-          form.addEventListener
+        })();
+      </script>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fbrand">一般社団法人 ここのは</div>
+  <p>代表理事　矢嶋 隼也｜〒679-0105 兵庫県加西市朝妻町1013-1｜TEL：070-8581-6921</p>
+  <p style="margin-top:6px;">対応エリア：加西市・三木市・小野市・西脇市・加東市・多可町・宍粟市・市川町・神河町・福崎町</p>
+  <p style="margin-top:6px;"><a href="privacy.html" style="color:inherit;">プライバシーポリシー</a>｜© 一般社団法人ここのは</p>
+</footer>
+
+<div class="float-bar">
+  <a href="tel:07085816921" onclick="return gtagReportCallConversion(this.href);" class="fb-call">📞 今すぐ電話</a>
+  <a href="https://lin.ee/auAzwZU" target="_blank" rel="noopener" onclick="gtagReportLineConversion();" class="fb-line">💬 LINEで連絡</a>
+  <a href="#form" class="fb-form">✎ 無料見積り</a>
+</div>
+
+</body>
+</html>
