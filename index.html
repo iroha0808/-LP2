@@ -39,6 +39,8 @@
 <title>北播磨の空き家・お部屋の片付けなら一般社団法人ここのは｜地域密着の丁寧な片付け【加西・小野・西脇・三木】</title>
 <meta name="description" content="加西市・小野市・西脇市・三木市・加東市など北播磨の空き家・実家の片付け、遺品整理、ゴミ屋敷、倉庫の片付けは一般社団法人ここのはへ。代表が直接対応し、お見積り・出張費は無料。加西市の空き家家財処分補助金の申請もお手伝いします。">
 <link rel="canonical" href="https://kokonoha.jp/">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 
 <!-- OGP（LINE・SNSでリンクを送ったときの表示） -->
 <meta property="og:type" content="website">
@@ -131,6 +133,10 @@
     display:flex; align-items:center; justify-content:space-between; gap:16px;
   }
   .brand{display:flex; flex-direction:column; line-height:1.2;}
+  .brand-wrap{display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit; min-width:0;}
+  .brand-logo{width:48px; height:48px; flex-shrink:0; display:block;}
+  @media(max-width:400px){ .brand-wrap{gap:7px;} .brand-logo{width:34px; height:34px;} }
+  @media(max-width:350px){ .header-inner{padding:10px 14px; gap:10px;} .brand-logo{width:28px; height:28px;} .brand .name{font-size:12.5px;} .brand .area{font-size:8.5px;} .header-cta .btn{padding:8px 10px;} }
   .brand .name{font-family:"Shippori Mincho",serif; font-size:19px; font-weight:700; white-space:nowrap;}
   .brand .area{font-size:11px; color:var(--ink-soft); letter-spacing:.05em;}
   .header-cta{display:flex; align-items:center; gap:10px;}
@@ -461,9 +467,12 @@
 
 <header class="site">
   <div class="header-inner">
-    <div class="brand">
-      <span class="name">一般社団法人 ここのは</span>
-      <span class="area"><span class="nb">加西・小野・西脇・三木・加東</span><br><span class="nb">北播磨地域密着の片付け専門店</span></span>
+    <div class="brand-wrap">
+      <img class="brand-logo" src="images/logo-dark.png" alt="ここのは ロゴ" width="48" height="48">
+      <div class="brand">
+        <span class="name">一般社団法人 ここのは</span>
+        <span class="area"><span class="nb">加西・小野・西脇・三木・加東</span><br><span class="nb">北播磨地域密着の片付け専門店</span></span>
+      </div>
     </div>
     <div class="header-cta">
       <div class="tel-box">
