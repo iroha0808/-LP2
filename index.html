@@ -234,8 +234,9 @@
     padding:0 0 22px;
   }
   .achievement-photo{width:100%; display:flex; justify-content:center; padding-top:18px;}
-  .achievement-photo img{width:72%; max-width:320px; height:auto; aspect-ratio:700/1042; object-fit:cover; object-position:60% 50%; border-radius:2px; display:block;}
-  .achievement-caption{font-size:12px; color:var(--ink-soft); margin-top:4px;}
+  .achievement-photo .photo-frame{position:relative; width:72%; max-width:320px;}
+  .achievement-photo img{width:100%; height:auto; aspect-ratio:700/1042; object-fit:cover; object-position:55% 50%; border-radius:2px; display:block;}
+  .achievement-caption{position:absolute; top:10px; right:10px; margin:0; font-size:12px; line-height:1.6; color:var(--ink); background:rgba(255,255,255,.92); border:1px solid var(--line); border-radius:2px; padding:4px 10px; box-shadow:0 2px 6px rgba(0,0,0,.12);}
   .achievement-text{padding:0 24px; text-align:center; color:var(--ink);}
   .achievement-text .atag{font-size:12px; letter-spacing:.14em; color:var(--accent-dark); margin-bottom:8px; margin-top:12px;}
   .achievement-text p.achv-main{font-size:17px; font-weight:700; line-height:1.6; color:var(--ink);}
@@ -572,8 +573,10 @@
     <div>
       <div class="achievement-card">
         <div class="achievement-photo">
-          <img src="img/img13.webp" alt="代表理事 矢嶋隼也">
-          <p class="achievement-caption"><span class="nb">代表理事</span><br><span class="nb">矢嶋　隼也</span></p>
+          <div class="photo-frame">
+            <img src="img/img14.webp" alt="代表理事 矢嶋隼也">
+            <p class="achievement-caption"><span class="nb">代表理事</span><br><span class="nb">矢嶋　隼也</span></p>
+          </div>
         </div>
         <div class="achievement-text">
           <p class="achv-main"><span class="nb">加西市役所</span> <span class="nb">お片付け講座</span> <span class="nb">講師実績</span></p>
