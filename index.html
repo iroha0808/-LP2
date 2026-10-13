@@ -356,7 +356,14 @@
 
   /* voice */
   .voice-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
-  @media(max-width:820px){ .voice-grid{grid-template-columns:1fr;} }
+  @media(max-width:820px){
+    /* スマホ・タブレットは横スワイプ。次のカードの端が見えるように幅を85%に */
+    .voice-grid{display:flex; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none; margin-inline:-24px; padding:2px 24px 6px; scroll-padding-inline:24px;}
+    .voice-grid::-webkit-scrollbar{display:none;}
+    .voice-grid > .voice-card{flex:0 0 85%; min-width:0; scroll-snap-align:start;}
+  }
+  .voice-count{display:none; text-align:center; margin-top:12px; font-size:12.5px; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
+  @media(max-width:820px){ .voice-count{display:block;} }
   .voice-card{background:var(--white); border:1px solid var(--line); border-radius:12px; padding:22px 20px;}
   .voice-photo{
     aspect-ratio:4/3; border-radius:8px; margin-bottom:14px;
@@ -728,6 +735,25 @@
         <div class="who">西脇市・50代女性</div>
       </div>
     </div>
+    <p class="voice-count" id="voice-count" aria-live="polite"></p>
+    <script>
+      // スマホでお客様の声を横にスワイプしたとき、何件目かを表示する
+      (function(){
+        var track = document.querySelector('.voice-grid');
+        var cards = track.querySelectorAll('.voice-card');
+        var label = document.getElementById('voice-count');
+        function update(){
+          if (cards.length < 2) { label.textContent = ''; return; }
+          var step = cards[1].offsetLeft - cards[0].offsetLeft;
+          var i = step > 0 ? Math.round(track.scrollLeft / step) : 0;
+          i = Math.max(0, Math.min(cards.length - 1, i));
+          label.textContent = '← スワイプ　' + (i + 1) + ' / ' + cards.length + '　→';
+        }
+        track.addEventListener('scroll', update, {passive: true});
+        window.addEventListener('resize', update);
+        update();
+      })();
+    </script>
   </div>
 </section>
 
